@@ -221,11 +221,6 @@ void PerlinHeightMap::GenerateHeightInternal(){
 }
 
 void PerlinHeightMap::LerpWith(const PerlinHeightMap &anotherA, const PerlinHeightMap &anotherB, const float t) {
-	assert(gHeight == another.gHeight);
-	assert(gWidth == another.gWidth);
-	assert(mapHeight == another.mapHeight);
-	assert(mapWidth == another.mapWidth);
-
 	XMFLOAT2 *p = gradients;
 	XMFLOAT2 *q = anotherA.gradients;
 	XMFLOAT2 *w = anotherB.gradients;

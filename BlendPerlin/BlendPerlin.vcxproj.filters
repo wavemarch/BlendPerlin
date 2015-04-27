@@ -24,47 +24,29 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\D3D11Intro\d3d11CodeSet1\Common\d3dApp.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="D:\D3D11Intro\d3d11CodeSet1\Common\d3dUtil.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="D:\D3D11Intro\d3d11CodeSet1\Common\GameTimer.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="D:\D3D11Intro\d3d11CodeSet1\Common\LightHelper.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="D:\D3D11Intro\d3d11CodeSet1\Common\MathHelper.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
     <ClCompile Include="PerlinHeightMap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="BlendPerlin.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="$(D3DIntroCommon)\d3dApp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(D3DIntroCommon)\d3dUtil.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(D3DIntroCommon)\GameTimer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(D3DIntroCommon)\LightHelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(D3DIntroCommon)\MathHelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="D:\D3D11Intro\d3d11CodeSet1\Common\d3dApp.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="D:\D3D11Intro\d3d11CodeSet1\Common\d3dUtil.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="D:\D3D11Intro\d3d11CodeSet1\Common\d3dx11effect.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="D:\D3D11Intro\d3d11CodeSet1\Common\GameTimer.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="D:\D3D11Intro\d3d11CodeSet1\Common\LightHelper.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="D:\D3D11Intro\d3d11CodeSet1\Common\MathHelper.h">
-      <Filter>Common</Filter>
-    </ClInclude>
     <ClInclude Include="PerlinHeightMap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -72,6 +54,24 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="vertex.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(D3DIntroCommon)\d3dApp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(D3DIntroCommon)\d3dUtil.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(D3DIntroCommon)\d3dx11effect.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(D3DIntroCommon)\GameTimer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(D3DIntroCommon)\LightHelper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(D3DIntroCommon)\MathHelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
