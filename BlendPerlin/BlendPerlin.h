@@ -47,6 +47,9 @@ class BlendPerlin :	public D3DApp {
 
 	ID3D11RasterizerState *mRsState;
 
+	ID3D11BlendState *mNotBlendState;
+	ID3D11BlendState *mTransprancyBlendState;
+
 
 	POINT mLastMoustPoint;
 	float YawFromZfront;

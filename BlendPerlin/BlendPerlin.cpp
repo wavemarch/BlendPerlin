@@ -63,7 +63,26 @@ bool BlendPerlin::Init() {
 	rds.DepthClipEnable = true;
 	rds.FillMode = D3D11_FILL_MODE::D3D11_FILL_WIREFRAME;
 
-	md3dDevice->CreateRasterizerState(&rds, &mRsState);
+	HR(md3dDevice->CreateRasterizerState(&rds, &mRsState));
+
+
+	D3D11_BLEND_DESC bsc;
+	ZeroMemory(&bsc, sizeof(D3D11_BLEND_DESC));
+	bsc.AlphaToCoverageEnable = false;
+	bsc.IndependentBlendEnable = false;
+	bsc.RenderTarget[0].BlendEnable = TRUE;
+	bsc.RenderTarget[0].BlendOp = D3D11_BLEND_OP::D3D11_BLEND_OP_ADD;
+	bsc.RenderTarget[0].SrcBlend = D3D11_BLEND::D3D11_BLEND_BLEND_FACTOR;
+	bsc.RenderTarget[0].DestBlend = D3D11_BLEND::D3D11_BLEND_INV_BLEND_FACTOR;
+	bsc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP::D3D11_BLEND_OP_ADD;
+	bsc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND::D3D11_BLEND_ONE;
+	bsc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND::D3D11_BLEND_ZERO;
+	bsc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE::D3D11_COLOR_WRITE_ENABLE_ALL;
+
+	HR(md3dDevice->CreateBlendState(&bsc, &mTransprancyBlendState));
+
+	bsc.RenderTarget[0].BlendEnable = FALSE;
+	HR(md3dDevice->CreateBlendState(&bsc, &mNotBlendState));
 
 	return true;
 }
@@ -273,6 +292,9 @@ void BlendPerlin::DrawScene(){
 
 //	md3dImmediateContext->RSSetState(mRsState);
 
+	float TransMask[4] = {0.7f, 0.7f, 0.7f, 1.0f};
+	md3dImmediateContext->OMSetBlendState(mNotBlendState, TransMask, 0xffffffff);
+
 	UINT strides = sizeof(vertex);
 	UINT offsets = 0;
 	md3dImmediateContext->IASetVertexBuffers(0, 1, &(mHillsBuf), &strides, &offsets);
@@ -298,6 +320,7 @@ void BlendPerlin::DrawScene(){
 	md3dImmediateContext->IASetVertexBuffers(0, 1, &(mWaveBuf), &strides, &offsets);
 	md3dImmediateContext->IASetIndexBuffer(mWaveIndexBuf, DXGI_FORMAT_R32_UINT, 0);
 	fxTexture->SetResource(mWaterTexture);
+	md3dImmediateContext->OMSetBlendState(mTransprancyBlendState, TransMask, 0xffffffff);
 	mPass->Apply(0, md3dImmediateContext);
 	md3dImmediateContext->DrawIndexed(mWaves.M, 0, 0);
 
@@ -308,10 +331,12 @@ BlendPerlin::~BlendPerlin() {
 	ReleaseCOM(mFx);
 	ReleaseCOM(mGrassTexture);
 	ReleaseCOM(mWaterTexture);
-
 	ReleaseCOM(mHillsBuf);
 	ReleaseCOM(mHillsIndexBuf);
 	ReleaseCOM(mWaveBuf);
 	ReleaseCOM(mWaveIndexBuf);
 	ReleaseCOM(mLayout);
+	ReleaseCOM(mRsState);
+	ReleaseCOM(mTransprancyBlendState);
+	ReleaseCOM(mNotBlendState);
 }
