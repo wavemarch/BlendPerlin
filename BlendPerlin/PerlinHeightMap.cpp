@@ -59,8 +59,6 @@ void PerlinHeightMap::GenerateGradients(int gh, int gw){
 }
 
 void PerlinHeightMap::GenerateGradientsInternal(){
-
-
 	int index = 0;
 	XMFLOAT2 *p = gradients;
 	for (int i = 0; i < gHeight; ++i){
@@ -220,4 +218,29 @@ void PerlinHeightMap::GenerateHeightInternal(){
 	int tt = pI - iData;
 	assert(M == tt);
 	pI = NULL;
+}
+
+void PerlinHeightMap::LerpWith(const PerlinHeightMap &anotherA, const PerlinHeightMap &anotherB, const float t) {
+	assert(gHeight == another.gHeight);
+	assert(gWidth == another.gWidth);
+	assert(mapHeight == another.mapHeight);
+	assert(mapWidth == another.mapWidth);
+
+	XMFLOAT2 *p = gradients;
+	XMFLOAT2 *q = anotherA.gradients;
+	XMFLOAT2 *w = anotherB.gradients;
+	for (int i = 0; i < gHeight; ++i) {
+		for (int j = 0; j < gWidth; ++j){
+			XMVECTOR a = XMLoadFloat2(q);
+			XMVECTOR b = XMLoadFloat2(w);
+			XMVECTOR c = XMVectorLerp(a, b, t);
+			XMStoreFloat2(p, c);
+
+			++p;
+			++q;
+			++w;
+		}
+	}
+
+	GenerateHeightInternal();
 }

@@ -58,5 +58,7 @@ public:
 
 	void GenerateHeight(int enlargeFactor);
 	void GenerateHeightInternal();
+
+	void LerpWith(const PerlinHeightMap &anotherA, const PerlinHeightMap &anotherB, const float t);
 };
 

@@ -40,7 +40,9 @@ class BlendPerlin :	public D3DApp {
 
 	ID3D11Buffer *mWaveBuf;
 	ID3D11Buffer *mWaveIndexBuf;
-	PerlinHeightMap mWaves;
+	PerlinHeightMap mWaves, mWavesA, mWavesB;
+	bool useA;
+
 	float mWaveUpdateAccumulateTime;
 
 	ID3D11InputLayout *mLayout;

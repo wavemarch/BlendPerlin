@@ -159,7 +159,10 @@ void BlendPerlin::BuildHillsMesh(){
 }
 
 void BlendPerlin::BuildWavesMesh(){
-	mWaves.Refresh(10, 10, 10);
+	mWaves.Refresh(10, 10, 9);
+	mWavesA.Refresh(10, 10, 9);
+	mWavesB.Refresh(10, 10, 9);
+	useA = true;
 	
 	D3D11_BUFFER_DESC vbd;
 	ZeroMemory(&vbd, sizeof(D3D11_BUFFER_DESC));
@@ -188,8 +191,6 @@ void BlendPerlin::BuildWavesMesh(){
 }
 
 void BlendPerlin::RefreshWavesMesh(){
-	mWaves.Refresh();
-
 	D3D11_MAPPED_SUBRESOURCE mappedData;
 	HR(md3dImmediateContext->Map(mWaveBuf, 0, D3D11_MAP::D3D11_MAP_WRITE_DISCARD, 0, &mappedData));
 	memcpy(mappedData.pData, mWaves.vData, sizeof(vertex)* mWaves.mapHeight * mWaves.mapWidth);
@@ -276,18 +277,37 @@ void BlendPerlin::UpdateScene(float dt){
 	XMStoreFloat4x4(&mView, viewMatrix);
 
 		
-	mWaveUpdateAccumulateTime += dt;
 
-	if (mWaveUpdateAccumulateTime >= 0.06f){
-		mWaveUpdateAccumulateTime = 0.0f;
-//		RefreshWavesMesh();
-
-		XMMATRIX translationMatrix = XMMatrixTranslation(0.005, 0.005, 0.0);
-		XMMATRIX curTexTran = XMLoadFloat4x4(&mTexTran);
-
-		curTexTran *= translationMatrix;
-		XMStoreFloat4x4(&mTexTran, curTexTran);
+	PerlinHeightMap *a = NULL, *b = NULL;
+	if (useA){
+		a = &mWavesA;
+		b = &mWavesB;
 	}
+	else {
+		b = &mWavesA;
+		a = &mWavesB;
+	}
+
+	const float fullTime = 0.3f;
+	if (mWaveUpdateAccumulateTime >= fullTime){
+		mWaveUpdateAccumulateTime = 0.0f;
+		//update waves mesh
+		useA = !useA;
+		a->Refresh();
+	}
+	else {
+		mWaves.LerpWith(*a, *b, mWaveUpdateAccumulateTime / fullTime);
+	}
+
+	//transform texture coordinate
+	XMMATRIX translationMatrix = XMMatrixTranslation(0.0002, 0.0002, 0.0);
+	XMMATRIX curTexTran = XMLoadFloat4x4(&mTexTran);
+	curTexTran *= translationMatrix;
+	XMStoreFloat4x4(&mTexTran, curTexTran);
+
+	RefreshWavesMesh();
+
+	mWaveUpdateAccumulateTime += dt;
 }
 
 void BlendPerlin::DrawScene(){
