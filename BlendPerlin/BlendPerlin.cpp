@@ -131,7 +131,7 @@ void BlendPerlin::LoadTextures(){
 }
 
 void BlendPerlin::BuildHillsMesh(){
-	mHills.Refresh(5, 5, 20);
+	mHills.Refresh(11, 11, 20);
 
 	D3D11_BUFFER_DESC vbd;
 	ZeroMemory(&vbd, sizeof(D3D11_BUFFER_DESC));
@@ -159,9 +159,9 @@ void BlendPerlin::BuildHillsMesh(){
 }
 
 void BlendPerlin::BuildWavesMesh(){
-	mWaves.Refresh(10, 10, 9);
-	mWavesA.Refresh(10, 10, 9);
-	mWavesB.Refresh(10, 10, 9);
+	mWaves.Refresh(21, 21, 10);
+	mWavesA.Refresh(21, 21, 10);
+	mWavesB.Refresh(21, 21, 10);
 	useA = true;
 	
 	D3D11_BUFFER_DESC vbd;
@@ -232,7 +232,7 @@ void BlendPerlin::OnMouseMove(WPARAM btnState, int x, int y) {
 		YawFromZfront += XMConvertToRadians((dx)* factor);;
 		Pitch += XMConvertToRadians((-dy) * factor);
 
-		Pitch = MathHelper::Clamp(Pitch, 0.1f-XM_PI, XM_PI - 0.1f);
+		Pitch = MathHelper::Clamp(Pitch, 0.1f-XM_PIDIV2, XM_PIDIV2 - 0.1f);
 
 		float tgtX = sinf(YawFromZfront);
 		float tgtZ = cosf(YawFromZfront);
