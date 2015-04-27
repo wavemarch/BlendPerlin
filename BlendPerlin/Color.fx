@@ -8,6 +8,7 @@ struct VsIn {
 
 struct VsOut {
 	float4 posH : SV_POSITION;
+	float3 posW : POSITION;
 	float4 ambient : COLOR0;
 	float4 diffuse : COLOR1;
 	float4 specular : COLOR2;
@@ -34,14 +35,22 @@ cbuffer perObj {
 	float4x4 gTexTran;
 };
 
+cbuffer fog {
+	float4 fogcolor;
+	float fogStart;
+	float fogEnd;
+};
+
 VsOut VS(VsIn vin) {
 	VsOut vout;
 	
 	vout.posH = mul(float4(vin.posL, 1.0f), gWorldViewProj);
+
 	vout.tex = vin.tex;
 
 	float3 normalW = mul(vin.normalL, (float3x3)gWorld);
 	float3 posW = (float3)mul(float4(vin.posL, 1.0f), gWorld);
+	vout.posW = posW;
 
 	float3 toEye = normalize((float3)gEyePosW - posW);
 
@@ -54,9 +63,15 @@ float4 PS(VsOut vout) : SV_TARGET{
 	float2 texcor = (float2)mul(float4(vout.tex, 0.0f, 1.0f), gTexTran);
 	float4 txColor = gDiffuseMap.Sample(spl, texcor);
 
-	float4 finalColor = 2.0f * txColor * (vout.ambient + vout.diffuse) + vout.specular;
+	float4 finalColor = txColor * (vout.ambient + vout.diffuse) + vout.specular;
 
 	finalColor.a = txColor.a * gMaterial.Diffuse.a;
+
+	float dis = length(vout.posW - (float3)gEyePosW);
+
+	float t = saturate((dis-fogStart)/(fogEnd-fogStart));
+	finalColor = lerp(finalColor, fogcolor, t);
+
 	
 	return finalColor;
 }

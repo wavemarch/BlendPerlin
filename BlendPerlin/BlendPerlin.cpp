@@ -36,11 +36,15 @@ mLayout(NULL)
 
 	mGrassMat.Ambient = XMFLOAT4(0.48f, 0.77f, 0.46f, 1.0f);
 	mGrassMat.Diffuse = XMFLOAT4(0.48f, 0.77f, 0.46, 1.0f);
-	mGrassMat.Specular = XMFLOAT4(0.1f, 0.1f, 0.1f, 18.0f);
+	mGrassMat.Specular = XMFLOAT4(0.1f, 0.1f, 0.1f, 1.0f);
+
+	mWaterMat.Ambient = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
+	mWaterMat.Diffuse = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
+	mWaterMat.Specular = XMFLOAT4(1.0f, 1.0f, 1.0f, 18.0f);
 
 	mDlight.Ambient = XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
-	mDlight.Diffuse = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
-	mDlight.Specular = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
+	mDlight.Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	mDlight.Specular = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	mDlight.Direction = XMFLOAT3(0.0f, -1.0f, 0.0f);
 	mDlight.Pad = 1.0f;
 
@@ -120,6 +124,9 @@ void BlendPerlin::CompileEffect() {
 	fxDlight = mFx->GetVariableByName("dLight");
 	fxEyePosW = mFx->GetVariableByName("gEyePosW")->AsVector();
 	fxTexTran = mFx->GetVariableByName("gTexTran")->AsMatrix();
+	fxFogColor = mFx->GetVariableByName("fogcolor")->AsVector();
+	fxStart = mFx->GetVariableByName("fogStart")->AsScalar();
+	fxEnd = mFx->GetVariableByName("fogEnd")->AsScalar();
 
 	ReleaseCOM(shaderBinary);
 
@@ -131,7 +138,7 @@ void BlendPerlin::LoadTextures(){
 }
 
 void BlendPerlin::BuildHillsMesh(){
-	mHills.Refresh(11, 11, 20);
+	mHills.Refresh(6, 6, 80);
 
 	D3D11_BUFFER_DESC vbd;
 	ZeroMemory(&vbd, sizeof(D3D11_BUFFER_DESC));
@@ -159,9 +166,9 @@ void BlendPerlin::BuildHillsMesh(){
 }
 
 void BlendPerlin::BuildWavesMesh(){
-	mWaves.Refresh(21, 21, 10);
-	mWavesA.Refresh(21, 21, 10);
-	mWavesB.Refresh(21, 21, 10);
+	mWaves.Refresh(11, 11, 40);
+	mWavesA.Refresh(11, 11, 40);
+	mWavesB.Refresh(11, 11, 40);
 	useA = true;
 	
 	D3D11_BUFFER_DESC vbd;
@@ -311,13 +318,17 @@ void BlendPerlin::UpdateScene(float dt){
 }
 
 void BlendPerlin::DrawScene(){
-	md3dImmediateContext->ClearRenderTargetView(mRenderTargetView, (float*)&Colors::LightSteelBlue);
+	md3dImmediateContext->ClearRenderTargetView(mRenderTargetView, (float*)&Colors::Silver);
 	md3dImmediateContext->ClearDepthStencilView(mDepthStencilView, D3D11_CLEAR_DEPTH | D3D10_CLEAR_STENCIL, 1.0f, 0);
 
 	md3dImmediateContext->IASetInputLayout(mLayout);
 	md3dImmediateContext->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 //	md3dImmediateContext->RSSetState(mRsState);
+
+	fxFogColor->SetFloatVector((float*)&Colors::Silver);
+	fxStart->SetFloat(30.0f);
+	fxEnd->SetFloat(800.0f);
 
 	float TransMask[4] = {0.7f, 0.7f, 0.7f, 1.0f};
 	md3dImmediateContext->OMSetBlendState(mNotBlendState, TransMask, 0xffffffff);

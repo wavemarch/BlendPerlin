@@ -33,6 +33,10 @@ class BlendPerlin :	public D3DApp {
 	ID3DX11EffectMatrixVariable *fxTexTran;
 	XMFLOAT4X4 mTexTran;
 
+	ID3DX11EffectVectorVariable *fxFogColor;
+	ID3DX11EffectScalarVariable *fxStart;
+	ID3DX11EffectScalarVariable *fxEnd;
+
 
 	ID3D11Buffer *mHillsBuf;
 	ID3D11Buffer *mHillsIndexBuf;
