@@ -25,6 +25,7 @@ mLayout(NULL)
 	XMStoreFloat4x4(&mWorld, I);
 	XMStoreFloat4x4(&mView, I);
 	XMStoreFloat4x4(&mProj, I);
+	XMStoreFloat4x4(&mTexTran, I);
 
 	mLastMoustPoint.x = 0;
 	mLastMoustPoint.y = 0;
@@ -277,9 +278,15 @@ void BlendPerlin::UpdateScene(float dt){
 		
 	mWaveUpdateAccumulateTime += dt;
 
-	if (mWaveUpdateAccumulateTime >= 0.08f){
+	if (mWaveUpdateAccumulateTime >= 0.06f){
 		mWaveUpdateAccumulateTime = 0.0f;
-		RefreshWavesMesh();
+//		RefreshWavesMesh();
+
+		XMMATRIX translationMatrix = XMMatrixTranslation(0.005, 0.005, 0.0);
+		XMMATRIX curTexTran = XMLoadFloat4x4(&mTexTran);
+
+		curTexTran *= translationMatrix;
+		XMStoreFloat4x4(&mTexTran, curTexTran);
 	}
 }
 
@@ -312,7 +319,9 @@ void BlendPerlin::DrawScene(){
 	fxMaterial->SetRawValue(&mGrassMat, 0, sizeof(mGrassMat));
 	fxDlight->SetRawValue(&mDlight, 0, sizeof(mDlight));
 	fxEyePosW->SetFloatVector((float*)&mEyePosW);
-	fxTexTran->SetMatrix((float*)&mTexTran);
+
+	auto I = XMMatrixIdentity();
+	fxTexTran->SetMatrix((float*)&I);
 
 	mPass->Apply(0, md3dImmediateContext);
 	md3dImmediateContext->DrawIndexed(mHills.M, 0, 0);
@@ -320,6 +329,7 @@ void BlendPerlin::DrawScene(){
 	md3dImmediateContext->IASetVertexBuffers(0, 1, &(mWaveBuf), &strides, &offsets);
 	md3dImmediateContext->IASetIndexBuffer(mWaveIndexBuf, DXGI_FORMAT_R32_UINT, 0);
 	fxTexture->SetResource(mWaterTexture);
+	fxTexTran->SetMatrix((float*)&mTexTran);
 	md3dImmediateContext->OMSetBlendState(mTransprancyBlendState, TransMask, 0xffffffff);
 	mPass->Apply(0, md3dImmediateContext);
 	md3dImmediateContext->DrawIndexed(mWaves.M, 0, 0);
