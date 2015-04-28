@@ -295,7 +295,7 @@ void BlendPerlin::UpdateScene(float dt){
 		a = &mWavesB;
 	}
 
-	const float fullTime = 0.3f;
+	const float fullTime = 1.0f;
 	if (mWaveUpdateAccumulateTime >= fullTime){
 		mWaveUpdateAccumulateTime = 0.0f;
 		//update waves mesh
