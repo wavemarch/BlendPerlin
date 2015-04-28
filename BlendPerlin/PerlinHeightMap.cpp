@@ -202,19 +202,13 @@ void PerlinHeightMap::GenerateHeightInternal(){
 			*(pI++) = i * mapWidth + j;
 			*(pI++) = I * mapWidth + J;
 			*(pI++) = i * mapWidth + J;
-		}
-	}
 
-	for (int i = 1; i < mapHeight; ++i){
-		for (int j = 1; j < mapWidth; ++j){
-			int _i = i - 1;
-			int _j = j - 1;
-
+			*(pI++) = I * mapWidth + J;
 			*(pI++) = i * mapWidth + j;
-			*(pI++) = _i * mapWidth + _j;
-			*(pI++) = i * mapWidth + _j;
+			*(pI++) = I * mapWidth + j;
 		}
 	}
+
 	int tt = pI - iData;
 	assert(M == tt);
 	pI = NULL;
