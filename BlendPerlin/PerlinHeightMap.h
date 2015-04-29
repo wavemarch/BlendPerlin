@@ -50,15 +50,15 @@ public:
 	PerlinHeightMap(int gh, int gw, int enlargeFactor);
 	~PerlinHeightMap();
 
-	void Refresh(int gh, int gw, int enlargeFactor);
-	void Refresh();
+	void Refresh(int gh, int gw, int enlargeFactor, float heightFactor);
+	void Refresh(float heightFactor);
 
 	void GenerateGradients(int gh, int gw);
 	void GenerateGradientsInternal();
 
-	void GenerateHeight(int enlargeFactor);
-	void GenerateHeightInternal();
+	void GenerateHeight(int enlargeFactor, float heightFactor);
+	void GenerateHeightInternal(float heightFactor);
 
-	void LerpWith(const PerlinHeightMap &anotherA, const PerlinHeightMap &anotherB, const float t);
+	void LerpWith(const PerlinHeightMap &anotherA, const PerlinHeightMap &anotherB, const float t, float heightFactor);
 };
 

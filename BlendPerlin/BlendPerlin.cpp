@@ -138,7 +138,7 @@ void BlendPerlin::LoadTextures(){
 }
 
 void BlendPerlin::BuildHillsMesh(){
-	mHills.Refresh(6, 6, 80);
+	mHills.Refresh(6, 6, 80, 5.0f);
 
 	D3D11_BUFFER_DESC vbd;
 	ZeroMemory(&vbd, sizeof(D3D11_BUFFER_DESC));
@@ -166,9 +166,9 @@ void BlendPerlin::BuildHillsMesh(){
 }
 
 void BlendPerlin::BuildWavesMesh(){
-	mWaves.Refresh(11, 11, 40);
-	mWavesA.Refresh(11, 11, 40);
-	mWavesB.Refresh(11, 11, 40);
+	mWaves.Refresh(11, 11, 40, 2.5f);
+	mWavesA.Refresh(11, 11, 40, 2.5f);
+	mWavesB.Refresh(11, 11, 40, 2.5f);
 	useA = true;
 	
 	D3D11_BUFFER_DESC vbd;
@@ -300,10 +300,10 @@ void BlendPerlin::UpdateScene(float dt){
 		mWaveUpdateAccumulateTime = 0.0f;
 		//update waves mesh
 		useA = !useA;
-		a->Refresh();
+		a->Refresh(1.5f);
 	}
 	else {
-		mWaves.LerpWith(*a, *b, mWaveUpdateAccumulateTime / fullTime);
+		mWaves.LerpWith(*a, *b, mWaveUpdateAccumulateTime / fullTime, 1.5f);
 	}
 
 	//transform texture coordinate

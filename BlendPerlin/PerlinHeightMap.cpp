@@ -9,17 +9,17 @@ PerlinHeightMap::PerlinHeightMap(){
 }
 
 PerlinHeightMap::PerlinHeightMap(int gh, int gw, int enlargeFactor) {
-	Refresh(gh, gw, enlargeFactor);
+	Refresh(gh, gw, enlargeFactor, 5.0f);
 }
 
-void PerlinHeightMap::Refresh(int gh, int gw, int enlargeFactor) {
+void PerlinHeightMap::Refresh(int gh, int gw, int enlargeFactor, float heightFactor) {
 	GenerateGradients(gh, gw);
-	GenerateHeight(enlargeFactor);
+	GenerateHeight(enlargeFactor, heightFactor);
 }
 
-void PerlinHeightMap::Refresh(){
+void PerlinHeightMap::Refresh(float heightFactor){
 	GenerateGradientsInternal();
-	GenerateHeightInternal();
+	GenerateHeightInternal(heightFactor);
 }
 
 
@@ -71,7 +71,7 @@ void PerlinHeightMap::GenerateGradientsInternal(){
 	p = NULL;
 }
 
-void PerlinHeightMap::GenerateHeight(int enlargeFactor) {
+void PerlinHeightMap::GenerateHeight(int enlargeFactor, float heightFactor) {
 	if (height != NULL) {
 		delete[]height;
 		height = NULL;
@@ -95,10 +95,10 @@ void PerlinHeightMap::GenerateHeight(int enlargeFactor) {
 	M = (mapHeight - 1) * (mapWidth - 1) * 2 * 3;
 	iData = new UINT[M];
 
-	GenerateHeightInternal();
+	GenerateHeightInternal(heightFactor);
 }
 
-void PerlinHeightMap::GenerateHeightInternal(){
+void PerlinHeightMap::GenerateHeightInternal(float heightFactor){
 	float *p = height;
 	for (int i = 0; i < mapHeight; ++i) {
 		for (int j = 0; j < mapWidth; ++j) {
@@ -142,7 +142,7 @@ void PerlinHeightMap::GenerateHeightInternal(){
 		for (int j = 0; j < mapWidth; ++j) {
 			pV->pos.x = j * xfactor;
 			pV->pos.z = i * yfactor;
-			pV->pos.y = *pH * 5 - 200;
+			pV->pos.y = *pH * heightFactor - 200;
 
 			++pV;
 			++pH;
@@ -214,7 +214,7 @@ void PerlinHeightMap::GenerateHeightInternal(){
 	pI = NULL;
 }
 
-void PerlinHeightMap::LerpWith(const PerlinHeightMap &anotherA, const PerlinHeightMap &anotherB, const float t) {
+void PerlinHeightMap::LerpWith(const PerlinHeightMap &anotherA, const PerlinHeightMap &anotherB, const float t, float heightFactor) {
 	XMFLOAT2 *p = gradients;
 	XMFLOAT2 *q = anotherA.gradients;
 	XMFLOAT2 *w = anotherB.gradients;
@@ -231,5 +231,5 @@ void PerlinHeightMap::LerpWith(const PerlinHeightMap &anotherA, const PerlinHeig
 		}
 	}
 
-	GenerateHeightInternal();
+	GenerateHeightInternal(heightFactor);
 }
